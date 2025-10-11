@@ -13,7 +13,7 @@ class ProductSetRepository extends AbstractRepository
     public function getTotal(): TotalStruct
     {
         $qb = $this->getQueryBuilder();
-        $qb->select('COUNT(*)');
+        $qb->select('COUNT(DISTINCT product.id)');
 
         $total = $qb->execute()->fetchOne();
         assert(is_scalar($total));
@@ -41,6 +41,8 @@ class ProductSetRepository extends AbstractRepository
                 'productAttribute',
                 $qb->expr()->eq('product.main_detail_id', 'productAttribute.articledetailsID'),
             )
+            ->orderBy('product.id')
+            ->groupBy('product.id')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
         ;
@@ -60,8 +62,6 @@ class ProductSetRepository extends AbstractRepository
                 $qb->expr()->eq('product.id', 'setSlot.articleID'),
             )
             ->where($qb->expr()->eq('setSlot.active', 1))
-            ->orderBy('product.id')
-            ->groupBy('product.id')
         ;
 
         return $qb;
