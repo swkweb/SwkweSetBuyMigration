@@ -111,7 +111,7 @@ class ProductSetPriceCalculationMappingHelper
             if (is_string($serializedObjectData) && is_string($languageId)) {
                 try {
                     $objectData = unserialize($serializedObjectData, ['allowed_classes' => false]);
-                } catch (\Throwable) {
+                } catch (\Throwable $e) {
                     $objectData = null;
                 }
 
